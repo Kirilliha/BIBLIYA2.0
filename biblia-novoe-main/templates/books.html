@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+{% block title %}Каталог книг — LibraryOS{% endblock %}
+{% block topbar_title %}Каталог книг{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+    <div>
+        <h2>Каталог книг</h2>
+        <p>Управление книжным фондом библиотеки</p>
+    </div>
+    <a href="/books/add" class="btn btn-primary">＋ Добавить книгу</a>
+</div>
+
+<!-- ─── SEARCH ────────────────────────────────────────────────── -->
+<form method="GET" style="margin-bottom: 24px;">
+    <div class="search-row">
+        <div class="search-input-wrap">
+            <span class="si">🔍</span>
+            <input type="text" name="search"
+                   placeholder="Поиск по названию, автору или ISBN..."
+                   value="{{ search }}">
+        </div>
+        <select name="category" class="filter-select">
+            <option value="">Все категории</option>
+            {% for cat in categories %}
+            <option value="{{ cat.category }}" {% if cat.category == selected_category %}selected{% endif %}>
+                {{ cat.category }}
+            </option>
+            {% endfor %}
+        </select>
+        <button type="submit" class="btn btn-primary">Найти</button>
+        {% if search or selected_category %}
+        <a href="/books" class="btn btn-secondary">Сбросить</a>
+        {% endif %}
+    </div>
+</form>
+
+<!-- ─── TABLE ─────────────────────────────────────────────────── -->
+<div class="table-wrap">
+    <div class="table-toolbar">
+        <span class="table-toolbar-title">
+            {% if search or selected_category %}
+                Результаты поиска
+            {% else %}
+                Все книги
+            {% endif %}
+        </span>
+        {% if books %}
+        <span class="badge badge-purple">{{ books | length }} записей</span>
+        {% endif %}
+    </div>
+
+    {% if books %}
+    <table>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Название / Автор</th>
+                <th>ISBN</th>
+                <th>Издат.</th>
+                <th>Год</th>
+                <th>Категория</th>
+                <th>Доступно</th>
+                <th>Действия</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for book in books %}
+            <tr>
+                <td class="td-muted">{{ book.id }}</td>
+                <td>
+                    <div class="td-bold">{{ book.title }}</div>
+                    <div class="td-muted">{{ book.author }}</div>
+                </td>
+                <td class="td-muted">{{ book.isbn or '—' }}</td>
+                <td class="td-muted">{{ book.publisher or '—' }}</td>
+                <td class="td-muted">{{ book.year or '—' }}</td>
+                <td>
+                    {% if book.category %}
+                        <span class="badge badge-purple">{{ book.category }}</span>
+                    {% else %}
+                        <span class="td-muted">—</span>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if book.available == 0 %}
+                        <span class="avail avail-out"><span class="avail-dot"></span>0 / {{ book.quantity }}</span>
+                    {% elif book.available <= 1 %}
+                        <span class="avail avail-low"><span class="avail-dot"></span>{{ book.available }} / {{ book.quantity }}</span>
+                    {% else %}
+                        <span class="avail avail-ok"><span class="avail-dot"></span>{{ book.available }} / {{ book.quantity }}</span>
+                    {% endif %}
+                </td>
+                <td>
+                    <div class="actions-cell">
+                        <a href="/books/edit/{{ book.id }}" class="btn btn-secondary btn-sm">✏️ Изменить</a>
+                        <a href="/books/delete/{{ book.id }}" class="btn btn-danger btn-sm"
+                           onclick="return confirm('Удалить книгу «{{ book.title }}»?')">🗑️</a>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div class="empty-state">
+        <div class="es-icon">🔎</div>
+        <h3>Ничего не найдено</h3>
+        <p>Попробуйте изменить параметры поиска или добавьте новую книгу</p>
+        <a href="/books/add" class="btn btn-primary">Добавить книгу</a>
+    </div>
+    {% endif %}
+</div>
+
+{% endblock %}

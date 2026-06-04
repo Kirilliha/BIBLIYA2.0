@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block title %}Добавить книгу — LibraryOS{% endblock %}
+{% block topbar_title %}Добавить книгу{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+    <div>
+        <h2>Добавить книгу</h2>
+        <p>Заполните информацию о новой книге</p>
+    </div>
+    <a href="/books" class="btn btn-secondary">← Назад к каталогу</a>
+</div>
+
+<div class="card">
+    <form method="POST">
+        <div class="form-grid">
+
+            <div class="form-group">
+                <label>Название книги <span class="required-star">*</span></label>
+                <input type="text" name="title" placeholder="Введите название книги" required>
+            </div>
+
+            <div class="form-group">
+                <label>Автор <span class="required-star">*</span></label>
+                <input type="text" name="author" placeholder="Фамилия Имя Отчество" required>
+            </div>
+
+            <div class="form-group">
+                <label>ISBN</label>
+                <input type="text" name="isbn" placeholder="978-5-XXXXX-XXX-X">
+            </div>
+
+            <div class="form-group">
+                <label>Издательство</label>
+                <input type="text" name="publisher" placeholder="Название издательства">
+            </div>
+
+            <div class="form-group">
+                <label>Год издания</label>
+                <input type="number" name="year" placeholder="2024" min="1000" max="2100">
+            </div>
+
+            <div class="form-group">
+                <label>Количество экземпляров <span class="required-star">*</span></label>
+                <input type="number" name="quantity" value="1" min="1" required>
+            </div>
+
+            <div class="form-group form-span-full">
+                <label>Категория</label>
+                <select name="category">
+                    <option value="">— Выберите категорию —</option>
+                    <option value="Художественная литература">Художественная литература</option>
+                    <option value="Научная литература">Научная литература</option>
+                    <option value="Учебная литература">Учебная литература</option>
+                    <option value="Детская литература">Детская литература</option>
+                    <option value="Справочная литература">Справочная литература</option>
+                    <option value="Техническая литература">Техническая литература</option>
+                </select>
+            </div>
+
+        </div>
+
+        <div class="form-actions" style="margin-top: 24px;">
+            <button type="submit" class="btn btn-primary">💾 Сохранить книгу</button>
+            <a href="/books" class="btn btn-secondary">Отмена</a>
+        </div>
+    </form>
+</div>
+
+{% endblock %}

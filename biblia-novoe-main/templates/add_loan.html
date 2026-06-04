@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}Выдать книгу — LibraryOS{% endblock %}
+{% block topbar_title %}Выдать книгу{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+    <div>
+        <h2>Выдать книгу</h2>
+        <p>Оформление выдачи книги читателю</p>
+    </div>
+    <a href="/loans" class="btn btn-secondary">← Назад к журналу</a>
+</div>
+
+<div class="card" style="max-width: 640px;">
+    <form method="POST">
+        <div class="form-grid" style="grid-template-columns: 1fr;">
+
+            <div class="form-group">
+                <label>Книга <span class="required-star">*</span></label>
+                <select name="book_id" required>
+                    <option value="">— Выберите книгу —</option>
+                    {% for book in books %}
+                    <option value="{{ book.id }}">
+                        {{ book.title }} — {{ book.author }} &nbsp;(доступно: {{ book.available }})
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Читатель <span class="required-star">*</span></label>
+                <select name="reader_id" required>
+                    <option value="">— Выберите читателя —</option>
+                    {% for reader in readers %}
+                    <option value="{{ reader.id }}">{{ reader.full_name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+        </div>
+
+        <div class="form-actions" style="margin-top: 24px;">
+            <button type="submit" class="btn btn-primary">📤 Оформить выдачу</button>
+            <a href="/loans" class="btn btn-secondary">Отмена</a>
+        </div>
+    </form>
+</div>
+
+{% endblock %}

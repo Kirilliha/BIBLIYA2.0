@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% block title %}Журнал выдач — LibraryOS{% endblock %}
+{% block topbar_title %}Журнал выдач{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+    <div>
+        <h2>Журнал выдач</h2>
+        <p>История выдачи и возврата книг</p>
+    </div>
+    <a href="/loans/add" class="btn btn-primary">📤 Выдать книгу</a>
+</div>
+
+<div class="table-wrap">
+    <div class="table-toolbar">
+        <span class="table-toolbar-title">Все операции</span>
+        {% if loans %}
+        <span class="badge badge-purple">{{ loans | length }} записей</span>
+        {% endif %}
+    </div>
+
+    {% if loans %}
+    <table>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Книга</th>
+                <th>Читатель</th>
+                <th>Дата выдачи</th>
+                <th>Дата возврата</th>
+                <th>Статус</th>
+                <th>Действие</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for loan in loans %}
+            <tr>
+                <td class="td-muted">{{ loan.id }}</td>
+                <td>
+                    <div class="td-bold">{{ loan.title }}</div>
+                    <div class="td-muted">{{ loan.author }}</div>
+                </td>
+                <td class="td-bold">{{ loan.full_name }}</td>
+                <td>
+                    <span class="badge badge-gray">{{ loan.loan_date[:10] }}</span>
+                </td>
+                <td>
+                    {% if loan.return_date %}
+                        <span class="badge badge-gray">{{ loan.return_date[:10] }}</span>
+                    {% else %}
+                        <span class="td-muted">—</span>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if loan.status == 'active' %}
+                        <span class="badge badge-green">● Активна</span>
+                    {% else %}
+                        <span class="badge badge-gray">✓ Возвращена</span>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if loan.status == 'active' %}
+                        <a href="/loans/return/{{ loan.id }}" class="btn btn-success btn-sm">↩ Вернуть</a>
+                    {% else %}
+                        <span class="td-muted">—</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div class="empty-state">
+        <div class="es-icon">📭</div>
+        <h3>Нет записей о выдачах</h3>
+        <p>Оформите первую выдачу книги читателю</p>
+        <a href="/loans/add" class="btn btn-primary">Выдать книгу</a>
+    </div>
+    {% endif %}
+</div>
+
+{% endblock %}

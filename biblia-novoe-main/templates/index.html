@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+{% block title %}Главная — LibraryOS{% endblock %}
+{% block topbar_title %}Обзор системы{% endblock %}
+
+{% block content %}
+
+<!-- ─── STAT CARDS ───────────────────────────────────────────── -->
+<div class="stats-grid">
+    <div class="stat-card purple">
+        <span class="stat-icon">📚</span>
+        <div class="stat-value">{{ total_books }}</div>
+        <div class="stat-label">Книг в каталоге</div>
+    </div>
+    <div class="stat-card green">
+        <span class="stat-icon">👥</span>
+        <div class="stat-value">{{ total_readers }}</div>
+        <div class="stat-label">Зарегистрированных читателей</div>
+    </div>
+    <div class="stat-card amber">
+        <span class="stat-icon">📤</span>
+        <div class="stat-value">{{ active_loans }}</div>
+        <div class="stat-label">Активных выдач</div>
+    </div>
+</div>
+
+<!-- ─── QUICK ACTIONS ────────────────────────────────────────── -->
+<div class="section-title">Быстрые действия</div>
+<div class="quick-grid" style="margin-bottom: 36px;">
+    <a href="/books/add" class="quick-card">
+        <div class="quick-icon">📗</div>
+        <div class="quick-text">
+            <div class="qt-title">Добавить книгу</div>
+            <div class="qt-sub">Пополнить каталог</div>
+        </div>
+    </a>
+    <a href="/readers/add" class="quick-card">
+        <div class="quick-icon">🧑‍💼</div>
+        <div class="quick-text">
+            <div class="qt-title">Новый читатель</div>
+            <div class="qt-sub">Зарегистрировать в системе</div>
+        </div>
+    </a>
+    <a href="/loans/add" class="quick-card">
+        <div class="quick-icon">📤</div>
+        <div class="quick-text">
+            <div class="qt-title">Выдать книгу</div>
+            <div class="qt-sub">Оформить выдачу</div>
+        </div>
+    </a>
+    <a href="/loans" class="quick-card">
+        <div class="quick-icon">📋</div>
+        <div class="quick-text">
+            <div class="qt-title">Журнал выдач</div>
+            <div class="qt-sub">История операций</div>
+        </div>
+    </a>
+</div>
+
+<!-- ─── RECENT BOOKS ─────────────────────────────────────────── -->
+<div class="section-title">Последние поступления</div>
+<div class="table-wrap">
+    <div class="table-toolbar">
+        <span class="table-toolbar-title">Недавно добавленные книги</span>
+        <a href="/books" class="btn btn-secondary btn-sm">Весь каталог →</a>
+    </div>
+
+    {% if recent_books %}
+    <table>
+        <thead>
+            <tr>
+                <th>Название</th>
+                <th>Автор</th>
+                <th>Категория</th>
+                <th>Доступно</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for book in recent_books %}
+            <tr>
+                <td class="td-bold">{{ book.title }}</td>
+                <td>{{ book.author }}</td>
+                <td>
+                    {% if book.category %}
+                        <span class="badge badge-purple">{{ book.category }}</span>
+                    {% else %}
+                        <span class="td-muted">—</span>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if book.available == 0 %}
+                        <span class="avail avail-out"><span class="avail-dot"></span>Нет в наличии</span>
+                    {% elif book.available <= 1 %}
+                        <span class="avail avail-low"><span class="avail-dot"></span>{{ book.available }} из {{ book.quantity }}</span>
+                    {% else %}
+                        <span class="avail avail-ok"><span class="avail-dot"></span>{{ book.available }} из {{ book.quantity }}</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div class="empty-state">
+        <div class="es-icon">📭</div>
+        <h3>Каталог пуст</h3>
+        <p>Добавьте первую книгу, чтобы начать работу</p>
+        <a href="/books/add" class="btn btn-primary">Добавить книгу</a>
+    </div>
+    {% endif %}
+</div>
+
+{% endblock %}

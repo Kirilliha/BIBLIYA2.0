@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}Редактировать читателя — LibraryOS{% endblock %}
+{% block topbar_title %}Редактировать читателя{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+    <div>
+        <h2>Редактировать читателя</h2>
+        <p>{{ reader.full_name }}</p>
+    </div>
+    <a href="/readers" class="btn btn-secondary">← Назад к читателям</a>
+</div>
+
+<div class="card">
+    <form method="POST">
+        <div class="form-grid">
+
+            <div class="form-group form-span-full">
+                <label>ФИО <span class="required-star">*</span></label>
+                <input type="text" name="full_name" value="{{ reader.full_name }}" required>
+            </div>
+
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" name="email" value="{{ reader.email or '' }}">
+            </div>
+
+            <div class="form-group">
+                <label>Телефон</label>
+                <input type="tel" name="phone" value="{{ reader.phone or '' }}">
+            </div>
+
+            <div class="form-group form-span-full">
+                <label>Адрес</label>
+                <textarea name="address">{{ reader.address or '' }}</textarea>
+            </div>
+
+        </div>
+
+        <div class="form-actions" style="margin-top: 24px;">
+            <button type="submit" class="btn btn-primary">💾 Сохранить изменения</button>
+            <a href="/readers" class="btn btn-secondary">Отмена</a>
+            <a href="/readers/delete/{{ reader.id }}" class="btn btn-danger"
+               onclick="return confirm('Удалить читателя «{{ reader.full_name }}»?')"
+               style="margin-left: auto;">🗑️ Удалить читателя</a>
+        </div>
+    </form>
+</div>
+
+{% endblock %}
